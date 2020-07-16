@@ -77,10 +77,10 @@ function comp() {
         
         
 
-        ])//pushing each new employee to the team array based on their "title" choice
+        ])
 
         .then(data => {
-            //switch used to decipher employee type, each employee has a different case
+           
             switch (data.main) {
                 case "View departments,roles, employees":
                     
@@ -103,16 +103,7 @@ function comp() {
                     
                         
                       });
-                        
-                // case "Engineer":
-                //     const newEngineer = new Engineer(data.name, data.id, data.email, data.github)
-                //     team.push(newEngineer)
-
-                //     break;
-                // case "Intern":
-                //     const newIntern = new Intern(data.name, data.id, data.email, data.school)
-                //     team.push(newIntern)
-
+               
 
 
             }
