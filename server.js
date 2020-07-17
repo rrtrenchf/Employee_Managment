@@ -32,82 +32,60 @@ function comp() {
             type: 'list',
             message: 'what would you like to do?',
             name: 'main',
-            choices: ['View departments,roles, employees',
+            choices: ['View department', 'View roles', 'view employees',
                 'add departments', 'add roles', 'add employees',
-                'Update employee roles'
+                'Update employee roles', 'Exit'
             ]
 
         },
-        {
-            type: 'input',
-            message: 'Add Department',
-            name: 'addDepartment',
-            when: function (answers) {
-                return answers.main === "add departments";
-            }
-            
-        },
-        {
-            type: 'input',
-            message: 'Add Role',
-            name: 'addRole',
-            when: function (answers) {
-                return answers.main === "add roles";
-            }
-            
-        },
-        {
-            type: 'input',
-            message: 'Add Employee',
-            name: 'addEmployee',
-            when: function (answers) {
-                return answers.main === "add employees";
-            }
-            
-        },
-        {
-            type: 'input',
-            message: 'Update employee Role',
-            name: 'updateRole',
-            when: function (answers) {
-                return answers.main === "Update employee roles";
-            }
-            
-        },
-        
-        
-
         ])
 
         .then(data => {
-           
+            console.log(data)
+
             switch (data.main) {
-                case "View departments,roles, employees":
-                    
-                        connection.query("SELECT * FROM department ;", function(err, data) {
-                          if (err) {
-                            throw(err)
-                          }
-                      
-                          return ({company_db : data });
-                        });
-                      
+                case "View department":
+
+                    connection.query("SELECT * FROM department", function (err, data) {
+
+                        if (err) {
+                            throw (err)
+                        }
+                        console.table(data)
+                        comp()
+                    });
+
                     break;
 
                 case "add departments":
-                    connection.query("INSERT INTO department (name) VALUES (?)", function(err, data) {
-                        if (err) {
-                          throw err;
-                        }
-                        return ({compnany_db: department})
-                    
-                        
-                      });
-               
+                    addDep()
+
+                    break;
+                case "add employees":
+                    addEmp()
+
+                    break;
+                case "view employees":
+                    viewEmp()
+                    break;
+                case "View roles":
+                    viewRole()
+                    break;
+                case "add roles":
+                    addRole()
+                    break;
+                case "Update employee roles":
+                    updateRole()
+                    break;
+                case "Exit":
+                    connection.end()
+                    break;
+
+
 
 
             }
-           
+
 
         })
 
@@ -116,4 +94,227 @@ function comp() {
 
 
 }
-comp()
+
+
+function addEmp() {
+    inquirer.prompt([{
+        type: "input",
+        name: "firstName",
+        message: " first name?"
+    },
+    {
+        type: "input",
+        name: "lastName",
+        message: " last name?"
+
+    },
+    {
+        type: "input",
+        name: "roleID",
+        message: " Role ID?"
+
+    },
+    {
+        type: "input",
+        name: "mgrID",
+        message: " Manager ID?"
+
+    },
+
+
+    ]).then(function (answer) {
+        connection.query("INSERT INTO employees SET? ", {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: answer.roleID,
+            manager_id: answer.mgrID
+
+
+        }, function (err, data) {
+            if (err){
+                throw(err)
+            }
+            console.table(data)
+            comp()
+        })
+    })
+}
+
+function viewEmp() {
+    connection.query("SELECT * FROM employees ", function (err, data) {
+        if (err) {
+            throw (err)
+        }
+
+        console.table(data)
+        comp()
+    });
+
+
+}
+function viewRole() {
+    connection.query("SELECT role.id,role.title,role.salary, department.name FROM role left JOIN department on role.department_id=department.id  ", function (err, data) {
+        if (err) {
+            throw (err)
+        }
+        console.table(data)
+        comp()
+
+    });
+}
+function addRole() {
+    inquirer.prompt([{
+        type: "input",
+        name: "title",
+        message: "Title?"
+    },
+    {
+        type: "input",
+        name: "salary",
+        message: " salary?"
+
+    },
+    {
+        type: "input",
+        name: "depID",
+        message: " department ID?"
+
+    },
+    ])
+        .then(function (answer) {
+            connection.query("INSERT INTO role SET ?", {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.depID,
+
+            }, function (err, data) {
+                if (err) {
+                    throw (err)
+                }
+                console.table(data)
+                comp()
+
+            });
+        })
+}
+function addDep(answer) {
+    inquirer.prompt([{
+        type: "input",
+        name: "depName",
+        message: " Department name?"
+
+    }]).then(function (answer) {
+        connection.query("INSERT INTO department SET ?", {
+            name: answer.depName
+
+        }, function (err, data) {
+            if (err) {
+                throw err;
+            }
+            console.table(data)
+            comp()
+
+
+        })
+    })
+
+}
+// function updateRole(){
+
+//     inquirer.prompt([{
+
+//     },
+//     {
+//         type: "input",
+//         name: "salary",
+//         message: " salary?"
+
+//     },
+//     {
+//         type: "input",
+//         name: "depID",
+//         message: " department ID?"
+
+//     },
+// ])
+//    .then (function (answer){
+
+//     connection.query("UPDATE role SET? WHERE ?",{
+//         [
+//             {
+//               quantity: 100
+//             },
+//             {
+//               flavor: "Rocky Road"
+//             }
+//           ],
+//     }), function (err, data) {
+//         if (err) {
+//             throw (err)
+//         }
+//         console.table(data)
+//         comp()
+//     }
+//     })
+
+
+
+
+
+
+
+
+// }
+
+function updateRole() {
+    // console.log("Updating all Rocky Road quantities...\n");
+
+    inquirer.prompt([{
+        type: "input",
+        name: "title",
+        message: "Title?"
+    },
+    {
+        type: "input",
+        name: "salary",
+        message: " salary?"
+
+    },
+    {
+        type: "input",
+        name: "depID",
+        message: " department ID?"
+
+    },
+    ])
+        .then(function (answer) {
+            connection.query(
+                "UPDATE role SET ? WHERE ?",
+                [
+                    {
+                        title: answer.title,
+                    },
+                    {
+                        salary: answer.salary,
+                    },
+                    {
+                        department_id: answer.depID,
+                    }
+                ],
+                function (err, data) {
+                    if (err) throw err;
+                    // console.log(res.affectedRows + " products updated!\n");
+                    // Call deleteProduct AFTER the UPDATE completes
+                    // deleteProduct();
+                    console.table(data)
+                    comp()
+                    
+                }
+                
+
+            );
+            
+        })
+
+
+}
