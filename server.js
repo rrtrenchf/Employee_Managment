@@ -21,10 +21,11 @@ connection.connect(function (err) {
         console.error("error connecting: " + err.stack);
         return;
     }
+    comp()
     console.log("connected as id " + connection.threadId);
 });
 
-// Serve index.handlebars to the root route, populated with all quote data.
+
 
 function comp() {
     inquirer
@@ -153,7 +154,7 @@ function viewEmp() {
 
 }
 function viewRole() {
-    connection.query("SELECT role.id,role.title,role.salary, department.name FROM role left JOIN department on role.department_id=department.id  ", function (err, data) {
+    connection.query("SELECT * FROM role", function (err, data) {
         if (err) {
             throw (err)
         }
@@ -219,57 +220,13 @@ function addDep(answer) {
     })
 
 }
-// function updateRole(){
-
-//     inquirer.prompt([{
-
-//     },
-//     {
-//         type: "input",
-//         name: "salary",
-//         message: " salary?"
-
-//     },
-//     {
-//         type: "input",
-//         name: "depID",
-//         message: " department ID?"
-
-//     },
-// ])
-//    .then (function (answer){
-
-//     connection.query("UPDATE role SET? WHERE ?",{
-//         [
-//             {
-//               quantity: 100
-//             },
-//             {
-//               flavor: "Rocky Road"
-//             }
-//           ],
-//     }), function (err, data) {
-//         if (err) {
-//             throw (err)
-//         }
-//         console.table(data)
-//         comp()
-//     }
-//     })
-
-
-
-
-
-
-
-
-// }
+   
 
 function updateRole() {
-    // console.log("Updating all Rocky Road quantities...\n");
+    
 
     inquirer.prompt([{
+
         type: "input",
         name: "title",
         message: "Title?"
@@ -289,24 +246,19 @@ function updateRole() {
     ])
         .then(function (answer) {
             connection.query(
-                "UPDATE role SET ? WHERE ?",
+                "UPDATE role SET ?",
                 [
                     {
                         title: answer.title,
-                    },
-                    {
                         salary: answer.salary,
-                    },
-                    {
                         department_id: answer.depID,
-                    }
+                    },
                 ],
                 function (err, data) {
-                    if (err) throw err;
-                    // console.log(res.affectedRows + " products updated!\n");
-                    // Call deleteProduct AFTER the UPDATE completes
-                    // deleteProduct();
+                    if (err) throw (err);
+                    
                     console.table(data)
+                    
                     comp()
                     
                 }
@@ -318,3 +270,4 @@ function updateRole() {
 
 
 }
+
