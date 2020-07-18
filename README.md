@@ -1,4 +1,4 @@
-### Employee Managment System
+# Employee Managment System
 ## Description
 - Gives users the ability to view add and update employee, role and department directories using CLI in node
 ## Installations
