@@ -7,7 +7,6 @@ var app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -82,20 +81,10 @@ function comp() {
                     connection.end()
                     break;
 
-
-
-
             }
-
-
         })
 
-
-
-
-
 }
-
 
 function addEmp() {
     inquirer.prompt([{
@@ -132,8 +121,8 @@ function addEmp() {
 
 
         }, function (err, data) {
-            if (err){
-                throw(err)
+            if (err) {
+                throw (err)
             }
             console.table(data)
             comp()
@@ -220,10 +209,10 @@ function addDep(answer) {
     })
 
 }
-   
+
 
 function updateRole() {
-    
+
 
     inquirer.prompt([{
 
@@ -256,16 +245,16 @@ function updateRole() {
                 ],
                 function (err, data) {
                     if (err) throw (err);
-                    
+
                     console.table(data)
-                    
+
                     comp()
-                    
+
                 }
-                
+
 
             );
-            
+
         })
 
 
